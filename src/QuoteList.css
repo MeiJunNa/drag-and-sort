@@ -1,35 +1,95 @@
-.Wrapper{
-    background-color: '#000';
-      display: flex;
-      flex-direction: column;
-      opacity: 0.5;
-      padding: 2px;
-      border: 1px;
-      padding-bottom: 0;
-      transition: background-color 0.2s ease, opacity 0.1s ease;
-      user-select: none;
-      width: 250px;
+.Wrapper {
+  background-color: '#000';
+  padding-bottom: 0;
+  user-select: none;
+  width: 100%;
 }
 
-.DropZone{
-    padding-bottom: 2px;
+.DropZone {
+  padding-bottom: 2px;
 }
 
-.ScrollContainer{
-    overflow-x: hidden;
+.ScrollContainer {
+  overflow-x: hidden;
   overflow-y: auto;
   max-height: 250px;
 }
 
-.Title{
-    padding: 2px;
-  transition: red ease 0.2s;
+.Title {
   flex-grow: 1;
   user-select: none;
   position: relative;
 }
 
 .Title:focus {
-    outline: 2px solid red;
-    outline-offset: 2px;
-  }
+  outline-offset: 2px;
+}
+
+.Container {
+  border-radius: 2px;
+  border: 2px solid transparent;
+  border-color: red;
+  background-color: red;
+  box-shadow: 2px 2px 1px red;
+  padding: 2px;
+  min-height: 40px;
+  margin-bottom: 2px;
+  user-select: none;
+  color: red;
+  display: flex;
+}
+
+.Content {
+  flex-grow: 1;
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.small {
+  flex-grow: 0;
+  margin: 0;
+  background-color: red;
+  border-radius: 2px;
+  font-weight: normal;
+  padding: 1px;
+}
+
+.QuoteId {
+  flex-grow: 1;
+  flex-shrink: 1;
+  margin: 0;
+  font-weight: normal;
+  text-overflow: ellipsis;
+  text-align: right;
+}
+
+.optionListRow {
+  width: 100%;
+}
+
+.optionListTitle {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.optionListEdit {
+  font-size: 16px;
+  font-weight: 400;
+  color: #1890FF;
+  cursor: pointer;
+}
+
+.optionListItem {
+  background: #FAFAFA;
+  border-radius: 3px 3px 0px 0px;
+  margin-bottom: 24px;
+  padding: 16px 0px;
+}
+
+.optionListLabelItem {
+  background: #FAFAFA;
+  border-radius: 3px 3px 0px 0px;
+  padding: 16px 0px;
+}

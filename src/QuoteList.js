@@ -1,6 +1,8 @@
 import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import QuoteItem from "./quote-item";
+import { Row, Col, Button, Divider, } from 'antd';
+import _ from 'lodash';
+import dragIcon from './drag.png';
 import './QuoteList.css'
 
 class InnerQuoteList extends React.Component {
@@ -8,7 +10,6 @@ class InnerQuoteList extends React.Component {
     if (nextProps.quotes !== this.props.quotes) {
       return true;
     }
-
     return false;
   }
 
@@ -21,12 +22,45 @@ class InnerQuoteList extends React.Component {
         shouldRespectForceTouch={false}
       >
         {(dragProvided, dragSnapshot) => (
-          <QuoteItem
+          <div
             key={quote.id}
-            quote={quote}
-            isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-            provided={dragProvided}
-          />
+            // isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
+          >
+            <div className='Content'
+              ref={dragProvided.innerRef}
+              {...dragProvided.draggableProps}
+              {...dragProvided.dragHandleProps}>
+              <div className={_.isEmpty(quote?.label) ? 'optionListItem' : 'optionListLabelItem'}>
+                <Row className='optionListRow'>
+                  <Col xs={24} sm={2} style={{ textAlign: 'center', }}>
+                    <img src={dragIcon} alt='no'></img>
+                  </Col>
+                  <Col xs={24} sm={4}>
+                    <span className='optionListTitle'>{quote?.nameIntl}</span>
+                    {!_.isEmpty(quote?.label)&&<span style={{ marginLeft: 16, }} className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>}
+                  </Col>
+                  {_.isEmpty(quote?.label)&&<Col xs={24} sm={{ span: 2, offset: 16 }}>
+                      <span className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>
+                  </Col>}
+                </Row>
+                {_.isEmpty(quote?.label)&&<Row className='optionListRow'>
+                  <Divider className='DividerWrap' />
+                </Row>}
+                <Row className='optionListRow'>
+                  <Col xs={24} sm={{ span: 22, offset: 2 }}>
+                    <Button onClick={() => console.log('新增事件')} style={{ marginTop: 16, }}>
+                      新增按钮
+                    </Button>
+                  </Col>
+                </Row>
+                {!_.isEmpty(quote?.label)&&<Row className='optionListRow'>
+                  <Col xs={24} sm={{ span: 20, offset: 2 }}>
+                    <Divider className='DividerWrap' />
+                  </Col>
+                </Row>}
+              </div>
+            </div>
+          </div>
         )}
       </Draggable>
     ));

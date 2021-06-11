@@ -1,10 +1,10 @@
 import React, { Component } from "react";
+import "antd/dist/antd.css";
 import Column from "./column";
 import reorder, { reorderQuoteMap } from "./reorder";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 class Board extends Component {
-  /* eslint-disable react/sort-comp */
   static defaultProps = {
     isCombineEnabled: false
   };
@@ -17,6 +17,8 @@ class Board extends Component {
   boardRef;
 
   onDragEnd = result => {
+    console.log('======result',result);
+    // 此处是拖动事件的事件处理
     if (result.combine) {
       if (result.type === "COLUMN") {
         const shallow = [...this.state.ordered];
@@ -82,7 +84,6 @@ class Board extends Component {
     const columns = this.state.columns;
     const ordered = this.state.ordered;
     const { containerHeight } = this.props;
-    console.log('======this.props.initial',this.props.initial)
     const board = (
       <Droppable
         droppableId="board"
@@ -95,7 +96,8 @@ class Board extends Component {
           <div 
           style={{ display: 'flex', flexDirection:'column', }}
           ref={provided.innerRef} {...provided.droppableProps}>
-            {ordered.map((key, index) => (
+            {ordered.map((key, index) => {
+              return(
               <Column
                 key={key}
                 index={index}
@@ -104,7 +106,7 @@ class Board extends Component {
                 isScrollable={this.props.withScrollableColumns}
                 isCombineEnabled={this.props.isCombineEnabled}
               />
-            ))}
+            )})}
           </div>
         )}
       </Droppable>
