@@ -88,13 +88,13 @@ class Board extends Component {
       <Droppable
         droppableId="board"
         type="COLUMN"
-        direction="horizontal"
+        //此行代码决定是垂直布局还是水平布局
+        // direction="horizontal"
         ignoreContainerClipping={Boolean(containerHeight)}
         isCombineEnabled={this.props.isCombineEnabled}
       >
         {provided => (
-          <div 
-          style={{ display: 'flex', flexDirection:'column', }}
+          <div
           ref={provided.innerRef} {...provided.droppableProps}>
             {ordered.map((key, index) => {
               return(

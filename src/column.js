@@ -53,9 +53,6 @@ function Column(props) {
           <QuoteList
             listId={title}
             listType="QUOTE"
-            style={{
-              backgroundColor: snapshot.isDragging ? 'red' : null
-            }}
             quotes={groupList?.length > 0 ? groupList : list?.length > 0 ? list : quotes}
             internalScroll={isScrollable}
             isCombineEnabled={Boolean(props.isCombineEnabled)}

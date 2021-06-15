@@ -5,27 +5,41 @@ import _ from 'lodash';
 import dragIcon from './drag.png';
 import './QuoteList.css'
 
-class InnerQuoteList extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.quotes !== this.props.quotes) {
-      return true;
-    }
-    return false;
+function QuoteList(props) {
+  const {
+    ignoreContainerClipping,
+    internalScroll,
+    scrollContainerStyle,
+    isDropDisabled,
+    isCombineEnabled,
+    listId,
+    listType,
+    quotes,
+    title
+  } = props;
+  
+  function InnerList(props) {
+    const { quotes, dropProvided } = props;
+    return (
+      <div>
+        <div className='DropZone' ref={dropProvided.innerRef}>
+          <InnerQuoteList quotes={quotes} />
+        </div>
+      </div>
+    );
   }
 
-  render() {
-    return this.props.quotes.map((quote, index) => (
+  function InnerQuoteList(props) {
+    return props.quotes.map((quote, index) => (
       <Draggable
         key={quote.id}
         draggableId={quote.id}
         index={index}
         shouldRespectForceTouch={false}
       >
-        {(dragProvided, dragSnapshot) => (
+        {(dragProvided) => (
           <div
-            key={quote.id}
-            // isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-          >
+            key={quote.id}>
             <div className='Content'
               ref={dragProvided.innerRef}
               {...dragProvided.draggableProps}
@@ -37,13 +51,13 @@ class InnerQuoteList extends React.Component {
                   </Col>
                   <Col xs={24} sm={4}>
                     <span className='optionListTitle'>{quote?.nameIntl}</span>
-                    {!_.isEmpty(quote?.label)&&<span style={{ marginLeft: 16, }} className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>}
+                    {!_.isEmpty(quote?.label) && <span style={{ marginLeft: 16, }} className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>}
                   </Col>
-                  {_.isEmpty(quote?.label)&&<Col xs={24} sm={{ span: 2, offset: 16 }}>
-                      <span className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>
+                  {_.isEmpty(quote?.label) && <Col xs={24} sm={{ span: 2, offset: 16 }}>
+                    <span className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>
                   </Col>}
                 </Row>
-                {_.isEmpty(quote?.label)&&<Row className='optionListRow'>
+                {_.isEmpty(quote?.label) && <Row className='optionListRow'>
                   <Divider className='DividerWrap' />
                 </Row>}
                 <Row className='optionListRow'>
@@ -53,9 +67,9 @@ class InnerQuoteList extends React.Component {
                     </Button>
                   </Col>
                 </Row>
-                {!_.isEmpty(quote?.label)&&<Row className='optionListRow'>
+                {!_.isEmpty(quote?.label) && <Row className='optionListRow'>
                   <Col xs={24} sm={{ span: 20, offset: 2 }}>
-                    <Divider className='DividerWrap' />
+                    {index + 1 !== props.quotes?.length && <Divider className='DividerWrap' />}
                   </Col>
                 </Row>}
               </div>
@@ -65,73 +79,38 @@ class InnerQuoteList extends React.Component {
       </Draggable>
     ));
   }
-}
 
-class InnerList extends React.Component {
-  render() {
-    const { quotes, dropProvided } = this.props;
-    const title = this.props.title ? <div className='Title'>{this.props.title}</div> : null;
-
-    return (
-      <div>
-        {title}
-        <div className='DropZone' ref={dropProvided.innerRef}>
-          <InnerQuoteList quotes={quotes} />
-        </div>
-      </div>
-    );
-  }
-}
-
-export default class QuoteList extends React.Component {
-  static defaultProps = {
-    listId: "LIST"
-  };
-  render() {
-    const {
-      ignoreContainerClipping,
-      internalScroll,
-      scrollContainerStyle,
-      isDropDisabled,
-      isCombineEnabled,
-      listId,
-      listType,
-      style,
-      quotes,
-      title
-    } = this.props;
-
-    return (
-      <Droppable
-        droppableId={listId}
-        type={listType}
-        ignoreContainerClipping={ignoreContainerClipping}
-        isDropDisabled={isDropDisabled}
-        isCombineEnabled={isCombineEnabled}
-      >
-        {(dropProvided) => (
-          <div
-            className='Wrapper'
-            {...dropProvided.droppableProps}
-          >
-            {internalScroll ? (
-              <div className='ScrollContainer' style={scrollContainerStyle}>
-                <InnerList
-                  quotes={quotes}
-                  title={title}
-                  dropProvided={dropProvided}
-                />
-              </div>
-            ) : (
+  return (
+    <Droppable
+      droppableId={listId}
+      type={listType}
+      ignoreContainerClipping={ignoreContainerClipping}
+      isDropDisabled={isDropDisabled}
+      isCombineEnabled={isCombineEnabled}
+    >
+      {(dropProvided) => (
+        <div
+          className='Wrapper'
+          {...dropProvided.droppableProps}
+        >
+          {internalScroll ? (
+            <div className='ScrollContainer' style={scrollContainerStyle}>
               <InnerList
                 quotes={quotes}
                 title={title}
                 dropProvided={dropProvided}
               />
-            )}
-          </div>
-        )}
-      </Droppable>
-    );
-  }
+            </div>
+          ) : (
+            <InnerList
+              quotes={quotes}
+              title={title}
+              dropProvided={dropProvided}
+            />
+          )}
+        </div>
+      )}
+    </Droppable>
+  );
 }
+export default QuoteList;
