@@ -17,7 +17,7 @@ function QuoteList(props) {
     quotes,
     title
   } = props;
-  
+
   function InnerList(props) {
     const { quotes, dropProvided } = props;
     return (
@@ -27,6 +27,11 @@ function QuoteList(props) {
         </div>
       </div>
     );
+  }
+
+
+  function handleEdit(quote){
+    props.passEditEvent(quote);
   }
 
   function InnerQuoteList(props) {
@@ -54,7 +59,7 @@ function QuoteList(props) {
                     {!_.isEmpty(quote?.label) && <span style={{ marginLeft: 16, }} className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>}
                   </Col>
                   {_.isEmpty(quote?.label) && <Col xs={24} sm={{ span: 2, offset: 16 }}>
-                    <span className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>
+                    <span className='optionListEdit' onClick={() => handleEdit(quote)}>编辑</span>
                   </Col>}
                 </Row>
                 {_.isEmpty(quote?.label) && <Row className='optionListRow'>

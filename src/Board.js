@@ -1,4 +1,4 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, useRef, } from 'react';
 import "antd/dist/antd.css";
 import Column from "./column";
 import reorder, { reorderQuoteMap } from "./reorder";
@@ -6,11 +6,25 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 function Board(props) {
   const isCombineEnabled = false;
-  const [columns, setColumns] = useState(props.initial);
-  const [ordered, setOrdered] = useState(Object.keys(props.initial));
+  const dragResult = useRef(undefined);
+  const [columns, setColumns] = useState(undefined);
+  const [ordered, setOrdered] = useState(undefined);
+
+  useEffect(() => {
+    if (props.initial) {
+      setColumns(props.initial);
+      setOrdered(Object.keys(props.initial));
+    }
+  }, [props.initial]);
+
+  useEffect(() => {
+    if (dragResult.current) {
+      props.handleSort(columns,ordered);
+    }
+  }, [dragResult.current]);
 
   function onDragEnd(result) {
-    console.log('======result', result);
+    dragResult.current = result;
     // 此处是拖动事件的事件处理
     if (result.combine) {
       if (result.type === "COLUMN") {
@@ -88,6 +102,7 @@ function Board(props) {
                 quotes={columns[key]}
                 isScrollable={props.withScrollableColumns}
                 isCombineEnabled={isCombineEnabled}
+                passEditEvent={props.passEditEvent}
               />
             )
           })}

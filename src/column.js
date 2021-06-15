@@ -56,6 +56,7 @@ function Column(props) {
             quotes={groupList?.length > 0 ? groupList : list?.length > 0 ? list : quotes}
             internalScroll={isScrollable}
             isCombineEnabled={Boolean(props.isCombineEnabled)}
+            passEditEvent={props.passEditEvent}
           />
 
         </div>

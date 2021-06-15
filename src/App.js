@@ -1,6 +1,7 @@
-import './App.css';
 import React from 'react';
+import _ from 'lodash';
 import Board from './Board';
+import './App.css';
 
 const data = {
   EMPTY: [{id: "00001",nameIntl:'列表01'}],
@@ -14,9 +15,28 @@ const data = {
   ]
 }
 function App() {
+
+  function editEvent(passValue){
+    console.log('传递过来的值，在此处做处理',passValue)
+  }
+
+  function handleSort(columns,ordered){
+    //此处对值进行排序，并作为参数传入接口
+    let newValue = (_.orderBy(Object.entries(columns), [([key])=>ordered.findIndex(some=>some === key)], ['asc'])).flatMap(([key,val])=>val);
+    let SpuMenuSortInput = [];
+    for(let i=0;i<newValue?.length;i++){
+      SpuMenuSortInput.push({ spuMenuId:newValue[i]?.id, sortorder:i });
+    }
+    // handleSortSpuMenu({
+    //   variables: {
+    //     input:{input:SpuMenuSortInput}
+    //   }
+    // });
+  }
+  
   return (
     <div className="App">
-      <Board initial={data}/>
+      <Board initial={data} passEditEvent={editEvent} handleSort={handleSort}/>
 		</div>
   );
 }
