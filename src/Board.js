@@ -1,40 +1,33 @@
-import React, { Component } from "react";
+import React, { useState, } from 'react';
 import "antd/dist/antd.css";
 import Column from "./column";
 import reorder, { reorderQuoteMap } from "./reorder";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
-class Board extends Component {
-  static defaultProps = {
-    isCombineEnabled: false
-  };
+function Board(props) {
+  const isCombineEnabled = false;
+  const [columns, setColumns] = useState(props.initial);
+  const [ordered, setOrdered] = useState(Object.keys(props.initial));
 
-  state = {
-    columns: this.props.initial,
-    ordered: Object.keys(this.props.initial)
-  };
-
-  boardRef;
-
-  onDragEnd = result => {
-    console.log('======result',result);
+  function onDragEnd(result) {
+    console.log('======result', result);
     // 此处是拖动事件的事件处理
     if (result.combine) {
       if (result.type === "COLUMN") {
-        const shallow = [...this.state.ordered];
+        const shallow = [...ordered];
         shallow.splice(result.source.index, 1);
-        this.setState({ ordered: shallow });
+        setOrdered(shallow);
         return;
       }
 
-      const column = this.state.columns[result.source.droppableId];
+      const column = columns[result.source.droppableId];
       const withQuoteRemoved = [...column];
       withQuoteRemoved.splice(result.source.index, 1);
-      const columns = {
-        ...this.state.columns,
+      const newColumns = {
+        ...columns,
         [result.source.droppableId]: withQuoteRemoved
       };
-      this.setState({ columns });
+      setColumns(newColumns);
       return;
     }
 
@@ -56,73 +49,61 @@ class Board extends Component {
 
     // reordering column
     if (result.type === "COLUMN") {
-      const ordered = reorder(
-        this.state.ordered,
+      const newOrdered = reorder(
+        ordered,
         source.index,
         destination.index
       );
-
-      this.setState({
-        ordered
-      });
+      setOrdered(newOrdered);
 
       return;
     }
 
     const data = reorderQuoteMap({
-      quoteMap: this.state.columns,
+      quoteMap: columns,
       source,
       destination
     });
-
-    this.setState({
-      columns: data.quoteMap
-    });
+    setColumns(data.quoteMap);
   };
-
-  render() {
-    const columns = this.state.columns;
-    const ordered = this.state.ordered;
-    const { containerHeight } = this.props;
-    const board = (
-      <Droppable
-        droppableId="board"
-        type="COLUMN"
-        //此行代码决定是垂直布局还是水平布局
-        // direction="horizontal"
-        ignoreContainerClipping={Boolean(containerHeight)}
-        isCombineEnabled={this.props.isCombineEnabled}
-      >
-        {provided => (
-          <div
+  const { containerHeight } = props;
+  const board = (
+    <Droppable
+      droppableId="board"
+      type="COLUMN"
+      //此行代码决定是垂直布局还是水平布局
+      // direction="horizontal"
+      ignoreContainerClipping={Boolean(containerHeight)}
+      isCombineEnabled={isCombineEnabled}
+    >
+      {provided => (
+        <div
           ref={provided.innerRef} {...provided.droppableProps}>
-            {ordered.map((key, index) => {
-              return(
+          {ordered?.map((key, index) => {
+            return (
               <Column
                 key={key}
                 index={index}
                 title={key}
                 quotes={columns[key]}
-                isScrollable={this.props.withScrollableColumns}
-                isCombineEnabled={this.props.isCombineEnabled}
+                isScrollable={props.withScrollableColumns}
+                isCombineEnabled={isCombineEnabled}
               />
-            )})}
-          </div>
-        )}
-      </Droppable>
-    );
+            )
+          })}
+        </div>
+      )}
+    </Droppable>
+  );
 
-    return (
-      <React.Fragment>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          {containerHeight ? (
-            <div height={containerHeight}>{board}</div>
-          ) : (
-            board
-          )}
-        </DragDropContext>
-      </React.Fragment>
-    );
-  }
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      {containerHeight ? (
+        <div height={containerHeight}>{board}</div>
+      ) : (
+        board
+      )}
+    </DragDropContext>
+  );
 }
 export default Board;
