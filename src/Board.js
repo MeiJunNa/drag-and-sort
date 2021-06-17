@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, } from 'react';
+import React, { useState, useEffect, } from 'react';
+import _ from 'lodash';
 import "antd/dist/antd.css";
 import Column from "./column";
 import reorder, { reorderQuoteMap } from "./reorder";
@@ -6,7 +7,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 function Board(props) {
   const isCombineEnabled = false;
-  const dragResult = useRef(undefined);
+  const [dragResult, setDragResult] = useState(undefined);
   const [columns, setColumns] = useState(undefined);
   const [ordered, setOrdered] = useState(undefined);
 
@@ -18,13 +19,49 @@ function Board(props) {
   }, [props.initial]);
 
   useEffect(() => {
-    if (dragResult.current) {
-      props.handleSort(columns,ordered);
+    if (dragResult?.type === "QUOTE"&&dragResult?.destination?.droppableId==="EMPTY"&&dragResult?.source?.droppableId==="EMPTY") {
+      //此判断是，若都是EMPTY内的两个进行移动，那么我们就将这两个进行合并为一个选项组。
+      props.handleSort(
+        columns,ordered,
+        props.initial.EMPTY[dragResult?.source?.index],
+        props.initial.EMPTY[dragResult?.destination?.index],
+      );
+      return;
     }
-  }, [dragResult.current]);
+    if (!_.isEmpty(dragResult)&&_.isEmpty(dragResult?.destination)) {
+      //此判断是，将内容从组内移出。
+      props.handleSort(
+        columns,ordered,
+        props.initial[dragResult?.source?.droppableId][dragResult?.source?.index],
+      );
+      return;
+    }
+    let initialMenu = _.clone(props.initial);
+    //ifCombine为false，说明执行的排序操作；为true，说明执行的合并操作
+    let ifCombine = false;
+    if(initialMenu && columns){
+      for(let i in initialMenu) {
+        if(initialMenu[i]?.length !== columns[i]?.length){
+          ifCombine = true;
+        }
+      }
+    }
+    if (dragResult) {
+      if(!ifCombine){
+        props.handleSort(columns,ordered);
+      }else{
+        props.handleSort(
+          columns,ordered,
+          props.initial[dragResult?.source?.droppableId][dragResult?.source?.index],
+          props.initial[dragResult?.destination?.droppableId][dragResult?.destination?.index],
+        );
+        return;
+      }
+    }
+  }, [dragResult]);
 
   function onDragEnd(result) {
-    dragResult.current = result;
+    setDragResult(result);
     // 此处是拖动事件的事件处理
     if (result.combine) {
       if (result.type === "COLUMN") {

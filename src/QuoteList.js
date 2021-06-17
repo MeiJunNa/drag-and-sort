@@ -30,7 +30,7 @@ function QuoteList(props) {
   }
 
 
-  function handleEdit(quote){
+  function handleEdit(quote) {
     props.passEditEvent(quote);
   }
 
@@ -100,6 +100,7 @@ function QuoteList(props) {
         >
           {internalScroll ? (
             <div className='ScrollContainer' style={scrollContainerStyle}>
+              {console.log('=====quotes', quotes)}
               <InnerList
                 quotes={quotes}
                 title={title}

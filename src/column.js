@@ -13,7 +13,6 @@ function Column(props) {
   const [groupList, setGroupList] = useState(undefined);
   useEffect(() => {
     if (quotes) {
-      console.log('quotes', quotes);
       let filterNoLabel = quotes?.filter(menu => _.isEmpty(menu?.label));
       setList(filterNoLabel);
       let filterHasLabel = quotes?.filter(menu => !_.isEmpty(menu?.label));
@@ -31,7 +30,7 @@ function Column(props) {
             <div className='Title'
               {...provided.dragHandleProps}
             >
-                {groupList?.length > 0 &&
+              {groupList?.length > 0 &&
                 <div className='optionListTitle'>
                   <Row className='optionListRow'
                   >
@@ -49,7 +48,7 @@ function Column(props) {
                 </div>}
             </div>
           </div>
-          
+
           <QuoteList
             listId={title}
             listType="QUOTE"

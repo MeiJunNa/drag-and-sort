@@ -4,7 +4,8 @@ import Board from './Board';
 import './App.css';
 
 const data = {
-  EMPTY: [{id: "00001",nameIntl:'列表01'}],
+  //EMPTY用来放那些不是组的
+  EMPTY: [{id: "00001",nameIntl:'列表01'},{id: "00002",nameIntl:'列表02'}],
   GROUP1: [
     {id: "01",nameIntl:'列表1',label: {id: "labelid1", nameIntl: "选项组", descriptionIntl: "描述"}},
     {id: "02",nameIntl:'列表2',label: {id: "labelid1", nameIntl: "选项组", descriptionIntl: "描述"}},
@@ -20,20 +21,27 @@ function App() {
     console.log('传递过来的值，在此处做处理',passValue)
   }
 
-  function handleSort(columns,ordered){
+  function handleSort(columns,ordered,source,destination,){
     //此处对值进行排序，并作为参数传入接口
-    let newValue = (_.orderBy(Object.entries(columns), [([key])=>ordered.findIndex(some=>some === key)], ['asc'])).flatMap(([key,val])=>val);
+    let newValue = (_.orderBy(Object.entries(columns), [([key])=>ordered.findIndex(some=>some === key)], ['asc']));
     let SpuMenuSortInput = [];
     for(let i=0;i<newValue?.length;i++){
       SpuMenuSortInput.push({ spuMenuId:newValue[i]?.id, sortorder:i });
     }
-    // handleSortSpuMenu({
-    //   variables: {
-    //     input:{input:SpuMenuSortInput}
-    //   }
-    // });
+    //此处是合并
+    if(destination&&source){
+      if(destination?.label?.id!=="EMPTY"){
+        console.log('========此处是一个在EMPTY中的拖到组内')
+      }else{
+        console.log('========此处两个EMPTY合并成一个组')
+      }
+    }
+    //此处是移出
+    if(_.isEmpty(destination)&&source){}
+
+    //此处是排序
+    if(_.isEmpty(destination)&&_.isEmpty(source)){}
   }
-  
   return (
     <div className="App">
       <Board initial={data} passEditEvent={editEvent} handleSort={handleSort}/>
