@@ -32,15 +32,27 @@ function App() {
     if(destination&&source){
       if(destination?.label?.id!=="EMPTY"){
         console.log('========此处是一个在EMPTY中的拖到组内')
+        if(source?.label?.id!=="EMPTY"){
+          //这个是判断，将一个组内的选项移到另外一个组内
+          console.log('========将一个组内的选项移到另外一个组内')
+        }else{
+          //将一个空的移入到组内
+          console.log('========将一个空的移入到组内')
+        }
       }else{
         console.log('========此处两个EMPTY合并成一个组')
       }
     }
     //此处是移出
-    if(_.isEmpty(destination)&&source){}
+    if(_.isEmpty(destination)&&source){
+      console.log('========此处是将组内的移出')
+    }
+    //还有将一个组内的移到另外一个组内
 
     //此处是排序
-    if(_.isEmpty(destination)&&_.isEmpty(source)){}
+    if(_.isEmpty(destination)&&_.isEmpty(source)){
+      console.log('========此处是排序')
+    }
   }
   return (
     <div className="App">

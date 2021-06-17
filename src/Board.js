@@ -117,14 +117,14 @@ function Board(props) {
     });
     setColumns(data.quoteMap);
   };
-  const { containerHeight } = props;
+
   const board = (
     <Droppable
       droppableId="board"
       type="COLUMN"
       //此行代码决定是垂直布局还是水平布局
       // direction="horizontal"
-      ignoreContainerClipping={Boolean(containerHeight)}
+      ignoreContainerClipping={false}
       isCombineEnabled={isCombineEnabled}
     >
       {provided => (
@@ -150,11 +150,7 @@ function Board(props) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      {containerHeight ? (
-        <div height={containerHeight}>{board}</div>
-      ) : (
-        board
-      )}
+      {board}
     </DragDropContext>
   );
 }
