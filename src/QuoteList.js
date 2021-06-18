@@ -1,7 +1,6 @@
 import React from "react";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { Row, Col, Button, Divider, } from 'antd';
-import _ from 'lodash';
 import dragIcon from './drag.png';
 import './QuoteList.css'
 
@@ -49,20 +48,20 @@ function QuoteList(props) {
               ref={dragProvided.innerRef}
               {...dragProvided.draggableProps}
               {...dragProvided.dragHandleProps}>
-              <div className={_.isEmpty(quote?.label) ? 'optionListItem' : 'optionListLabelItem'}>
+              <div className={quote?.label?.id === "EMPTY" ? 'optionListItem' : 'optionListLabelItem'}>
                 <Row className='optionListRow'>
                   <Col xs={24} sm={2} style={{ textAlign: 'center', }}>
                     <img src={dragIcon} alt='no'></img>
                   </Col>
                   <Col xs={24} sm={4}>
                     <span className='optionListTitle'>{quote?.nameIntl}</span>
-                    {!_.isEmpty(quote?.label) && <span style={{ marginLeft: 16, }} className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>}
+                    {quote?.label?.id !== "EMPTY" && <span style={{ marginLeft: 16, }} className='optionListEdit' onClick={() => console.log('编辑事件')}>编辑</span>}
                   </Col>
-                  {_.isEmpty(quote?.label) && <Col xs={24} sm={{ span: 2, offset: 16 }}>
+                  {quote?.label?.id === "EMPTY" && <Col xs={24} sm={{ span: 2, offset: 16 }}>
                     <span className='optionListEdit' onClick={() => handleEdit(quote)}>编辑</span>
                   </Col>}
                 </Row>
-                {_.isEmpty(quote?.label) && <Row className='optionListRow'>
+                {quote?.label?.id === "EMPTY" && <Row className='optionListRow'>
                   <Divider className='DividerWrap' />
                 </Row>}
                 <Row className='optionListRow'>
@@ -72,7 +71,7 @@ function QuoteList(props) {
                     </Button>
                   </Col>
                 </Row>
-                {!_.isEmpty(quote?.label) && <Row className='optionListRow'>
+                {quote?.label?.id !== "EMPTY" && <Row className='optionListRow'>
                   <Col xs={24} sm={{ span: 20, offset: 2 }}>
                     {index + 1 !== props.quotes?.length && <Divider className='DividerWrap' />}
                   </Col>

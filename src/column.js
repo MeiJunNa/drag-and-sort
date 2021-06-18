@@ -1,6 +1,5 @@
 import React, { useState, useEffect, } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import _ from 'lodash';
 import { Row, Col, Divider, } from 'antd';
 import "antd/dist/antd.css";
 import { MenuOutlined, } from '@ant-design/icons';
@@ -13,9 +12,9 @@ function Column(props) {
   const [groupList, setGroupList] = useState(undefined);
   useEffect(() => {
     if (quotes) {
-      let filterNoLabel = quotes?.filter(menu => _.isEmpty(menu?.label));
+      let filterNoLabel = quotes?.filter(menu => menu?.label?.id === "EMPTY");
       setList(filterNoLabel);
-      let filterHasLabel = quotes?.filter(menu => !_.isEmpty(menu?.label));
+      let filterHasLabel = quotes?.filter(menu => menu?.label?.id !== "EMPTY");
       setGroupList(filterHasLabel);
     }
   }, [quotes]);
